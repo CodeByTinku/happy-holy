@@ -1,0 +1,165 @@
+/*
+  Style reset and base setup
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Prevent default tap highlight for better touch interactions */
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #0f172a; /* Deep slate dark mode */
+    font-family: 'Outfit', sans-serif;
+    color: #f1f5f9;
+    overflow: hidden; /* Stop scroll bars from splashes */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    user-select: none;
+}
+
+/*
+  Canvas Background Layer
+*/
+#confetti-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Ignore clicks so splashes can work */
+    z-index: 1;
+}
+
+/*
+  Greeting Card Setup
+*/
+.card-container {
+    position: relative;
+    z-index: 10; /* Above canvas and splashes */
+    perspective: 1000px;
+}
+
+.card {
+    /* Glassmorphic Base */
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 3.5rem 4rem;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    max-width: 90vw;
+}
+
+/* Glowing Rotating Border Trick */
+.card::before {
+    content: '';
+    position: absolute;
+    inset: -2px; /* Pull it slightly beyond the card edge */
+    background: linear-gradient(90deg, #ec4899, #f59e0b, #10b981, #3b82f6, #a855f7, #ec4899);
+    background-size: 200% auto;
+    z-index: -1;
+    border-radius: 30px;
+    opacity: 0.1; /* Subtle pulse when not hovered */
+    transition: opacity 0.5s ease;
+    animation: gradientShift 3s linear infinite;
+    filter: blur(12px);
+}
+
+/* Dynamic Hover Effects */
+.card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.card:hover::before {
+    opacity: 0.8; /* Vibrant glow on hover */
+}
+
+/*
+  Typography
+*/
+.card h1 {
+    font-family: cursive;
+    font-size: 5rem;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    
+    /* Vibrant Text Gradient */
+    background: linear-gradient(to right, #ec4899, #f59e0b, #10b981, #3b82f6, #a855f7, #ec4899);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s linear infinite;
+    
+    /* Optional shadow layer simulating a 3D textual glow (works conditionally on webkit) */
+    position: relative;
+    z-index: 11;
+}
+
+.card p {
+    font-size: 1.2rem;
+    color: #cbd5e1;
+    font-weight: 400;
+    max-width: 380px;
+    margin: 1.5rem auto 0;
+    line-height: 1.5;
+}
+
+/*
+  Color Splash Objects
+*/
+.splash {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2; /* Below card, over background */
+    mix-blend-mode: screen; /* Pop heavily on dark background */
+    animation: splashAnim 0.8s cubic-bezier(0.1, 0.8, 0.2, 1) both;
+    transform-origin: center;
+}
+
+/*
+  Keyframes for Splashes and Gradients
+*/
+@keyframes gradientShift {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes splashAnim {
+    0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/*
+  Responsive Design Adapters
+*/
+@media (max-width: 768px) {
+    .card {
+        padding: 2.5rem 1.5rem;
+    }
+    .card h1 {
+        font-size: 4rem;
+    }
+    .card p {
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+}
